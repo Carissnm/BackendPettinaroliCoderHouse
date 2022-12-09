@@ -19,7 +19,7 @@ public class ReceiptProduct {
     @Column(name = "RP_QUANTITY", columnDefinition = "integer(11)")
     private @NotNull Integer quantity;
 
-    @Column(name = "PRICE", columnDefinition = "float(5,2)")
+    @Column(name = "PRICE", columnDefinition = "float(10,2)")
     private @NotNull Float price;
 
     @ManyToOne

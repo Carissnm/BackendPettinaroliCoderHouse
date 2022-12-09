@@ -21,7 +21,7 @@ public class Receipt {
     @Column(name = "QUANTITY", columnDefinition = "integer(11)")
     private @NotNull Integer quantity;
 
-    @Column(name = "TOTAL", columnDefinition = "float(5,2)")
+    @Column(name = "TOTAL", columnDefinition = "float(10,2)")
     private @NotNull Float total;
 
     // Relación de la entidad Receipt con la entidad Cliente

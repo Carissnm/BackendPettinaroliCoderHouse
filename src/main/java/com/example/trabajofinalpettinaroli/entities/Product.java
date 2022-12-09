@@ -24,7 +24,7 @@ public class Product {
    @Column(name = "PRD_QUANTITY", columnDefinition = "integer(11)")
    private @NotNull Integer quantity;
 
-   @Column(name = "PRD_PRICE", columnDefinition = "float(5,2)")
+   @Column(name = "PRD_PRICE", columnDefinition = "float(10,2)")
    private Float price;
 
    // mapeo la tabla ReceiptProduct desde producto para generar la relación OneToMany
