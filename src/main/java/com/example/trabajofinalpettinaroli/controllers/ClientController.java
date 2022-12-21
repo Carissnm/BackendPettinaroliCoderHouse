@@ -23,23 +23,36 @@ public class ClientController {
     @GetMapping(value = "/listar")
     public ResponseEntity<?> getAllClients() {
         List<Client> clients = clientService.findAllClients();
-
-        if(!clients.isEmpty()) {
-            return ResponseEntity.ok(clients);
-        } else {
-            return new ResponseEntity<>("No se encontraron clientes en la lista", HttpStatus.OK);
+        try {
+            if(!clients.isEmpty()) {
+                return ResponseEntity.ok(clients);
+            } else {
+                return new ResponseEntity<>("No se encontraron clientes en la lista", HttpStatus.OK);
+            }
         }
+        catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body("Ocurrió un error");
+        }
+
     }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<?> getClienteById(@PathVariable (name = "id") Long id) {
-        Optional<Client> client = clientService.findClientById(id);
+        try {
+            Optional<Client> client = clientService.findClientById(id);
 
-        if(client.isPresent()) {
-            return ResponseEntity.ok(client);
-        } else {
-            return new ResponseEntity<>("No se encontró ningún cliente con id " + id, HttpStatus.NOT_FOUND);
+            if(client.isPresent()) {
+                return ResponseEntity.ok(client);
+            } else {
+                return new ResponseEntity<>("No se encontró ningún cliente con id " + id, HttpStatus.NOT_FOUND);
+            }
         }
+        catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body("Ocurrió un error");
+        }
+
     }
 
     @PostMapping(value = "/agregar", consumes = {MediaType.APPLICATION_JSON_VALUE})
@@ -54,7 +67,28 @@ public class ClientController {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.internalServerError().body(null);
+            return ResponseEntity.internalServerError().body("Ocurrió un error");
+        }
+    }
+
+    @PutMapping(value = "/modificar/{id}")
+    public ResponseEntity<?> updateClient(@PathVariable("id") Long id, @RequestBody Client client) {
+        Optional<Client> clientData = clientService.findClientById(id);
+        try {
+            if(clientData.isPresent()) {
+                // Setteo los valores previos con los nuevos.
+                Client updateClient = clientData.get();
+                updateClient.setClientName(client.getClientName());
+                updateClient.setClientSurname(client.getClientSurname());
+                updateClient.setDni(client.getDni());
+                // Le asigno el nuevo cliente al viejo y lo guardo.
+                return new ResponseEntity<>(clientService.createClient(updateClient), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("El cliente no existe", HttpStatus.NOT_FOUND);
+            }
+        }
+        catch ( Exception e ) {
+            return ResponseEntity.internalServerError().body("Ocurrió un error");
         }
     }
 

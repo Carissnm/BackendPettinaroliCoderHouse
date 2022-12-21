@@ -13,7 +13,7 @@ public class Receipt {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "RECEIPT_ID", columnDefinition = "integer(11)")
-    private @NotNull Integer receiptId;
+    private @NotNull Long id;
 
     @Column(name = "RECEIPT_DATE", columnDefinition = "datetime")
     private @NotNull Date date;
@@ -45,8 +45,8 @@ public class Receipt {
     // GETTERS & SETTERS
 
 
-    public Integer getReceiptId() {
-        return receiptId;
+    public Long getReceiptId() {
+        return id;
     }
 
     public void setDate(Date date) {
@@ -80,7 +80,7 @@ public class Receipt {
     @Override
     public String toString() {
         return "Receipt{" +
-                "receiptId=" + receiptId +
+                "receiptId=" + id +
                 ", date=" + date +
                 ", quantity=" + quantity +
                 ", total=" + total +

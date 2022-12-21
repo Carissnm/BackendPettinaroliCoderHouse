@@ -11,7 +11,7 @@ public class ReceiptProduct {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "RP_ID", columnDefinition = "integer(11)")
-    private @NotNull Integer rpId;
+    private @NotNull Long id;
 
     @Column(name = "RP_DESCRIPTION", columnDefinition = "varchar(255)")
     private @NotNull String description;
@@ -50,8 +50,8 @@ public class ReceiptProduct {
         this.description = description;
     }
 
-    public Integer getRpId() {
-        return rpId;
+    public Long getRpId() {
+        return id;
     }
 
     public Receipt getReceipt() {
@@ -89,7 +89,7 @@ public class ReceiptProduct {
     @Override
     public String toString() {
         return "ReceiptProduct{" +
-                "rpId=" + rpId +
+                "rpId=" + id +
                 ", description='" + description + '\'' +
                 ", quantity='" + quantity + '\'' +
                 ", price=" + price +

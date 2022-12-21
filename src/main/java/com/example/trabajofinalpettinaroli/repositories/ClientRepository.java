@@ -9,5 +9,6 @@ import java.util.Optional;
 @Repository
 public interface ClientRepository extends JpaRepository<Client, Long> {
 
+    // Creo este método para utilizarlo luego en Service para chequear si un cliente ya existe por su Dni.
     public Optional<Client> findClientByDni(String dni);
 }

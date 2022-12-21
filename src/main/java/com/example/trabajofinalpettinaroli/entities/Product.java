@@ -13,9 +13,9 @@ public class Product {
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    @Column(name = "PRODUCT_ID", columnDefinition = "integer(11)")
-   private @NotNull Integer productId;
+   private @NotNull Long id;
 
-   @Column(name = "PRODUCT_CODE", columnDefinition = "integer(11)", unique = true)
+   @Column(name = "PRODUCT_CODE", columnDefinition = "integer(11)")
    private @NotNull Integer productCode;
 
    @Column(name = "PRD_DESCRIPTION", columnDefinition = "varchar(255)")
@@ -44,12 +44,12 @@ public class Product {
 
    // GETTERS & SETTERS
 
-   public Integer getProductId() {
-      return productId;
+   public Long getProductId() {
+      return id;
    }
 
-   public void setProductId(Integer productId) {
-      this.productId = productId;
+   public void setProductId(Long id) {
+      this.id = id;
    }
 
    public Integer getProductCode() {
@@ -95,7 +95,7 @@ public class Product {
    @Override
    public String toString() {
       return "Product{" +
-              "productId=" + productId +
+              "productId=" + id +
               ", productCode=" + productCode +
               ", description='" + description + '\'' +
               ", quantity=" + quantity +

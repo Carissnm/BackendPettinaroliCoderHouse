@@ -23,9 +23,6 @@ public class ClientService  {
     }
 
 
-
-
-
     // Create Client Method:
     public Client createClient(Client client) {
        return clientRepository.save(client);
@@ -34,6 +31,11 @@ public class ClientService  {
     // Find Client by ID method:
     public Optional<Client> findClientById(Long id) {
         return clientRepository.findById(id);
+    }
+
+    // Method to find Client by Dni
+    public Optional<Client> findClientByDni(String dni) {
+        return clientRepository.findClientByDni(dni);
     }
 
     // List all clients:
@@ -46,9 +48,7 @@ public class ClientService  {
         clientRepository.deleteById(id);
     }
 
-    public Optional<Client> findClientByDni(String dni) {
-        return clientRepository.findClientByDni(dni);
-    }
+
 
 
 }
