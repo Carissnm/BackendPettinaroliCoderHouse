@@ -25,7 +25,7 @@ public class Receipt {
     private @NotNull Float total;
 
     // Relación de la entidad Receipt con la entidad Cliente
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "CLIENT_ID", columnDefinition = "integer(11)")
     private Client client;
 

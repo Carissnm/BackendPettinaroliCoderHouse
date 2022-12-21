@@ -14,9 +14,9 @@ public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "CLIENT_ID", columnDefinition = "integer(11)")
-    private @NotNull Integer clientId;
+    private @NotNull Long id;
 
-    @Column(name = "CLIENT_DNI", columnDefinition = "varchar(255)", unique = true)
+    @Column(name = "CLIENT_DNI", columnDefinition = "varchar(255)")
     private @NotNull String dni;
 
     @Column(name = "CLIENT_NAME", columnDefinition = "varchar(255)")
@@ -42,8 +42,8 @@ public class Client {
 
     //GETTERS & SETTERS
 
-    public Integer getClientId() {
-        return clientId;
+    public Long getClientId() {
+        return id;
     }
 
     public String getDni() {
@@ -81,7 +81,7 @@ public class Client {
     @Override
     public String toString() {
         return "Client{" +
-                "clientId=" + clientId +
+                "clientId=" + id +
                 ", dni='" + dni + '\'' +
                 ", clientName='" + clientName + '\'' +
                 ", clientSurname='" + clientSurname + '\'' +
