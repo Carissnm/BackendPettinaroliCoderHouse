@@ -1,9 +1,11 @@
 package com.example.trabajofinalpettinaroli.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 
 import javax.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -28,6 +30,7 @@ public class Product {
    private Float price;
 
    // mapeo la tabla ReceiptProduct desde producto para generar la relación OneToMany
+   @JsonIgnore
    @OneToMany(mappedBy = "product")
    private List<ReceiptProduct> lines;
 
