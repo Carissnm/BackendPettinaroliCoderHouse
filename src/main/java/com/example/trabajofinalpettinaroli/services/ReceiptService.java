@@ -47,6 +47,11 @@ public class ReceiptService {
         return receiptRepository.findById(id);
     }
 
+    public void deleteReceipt(Long id) {
+        receiptRepository.deleteById(id);
+    }
+
+
     // Method to build a Receipt
     private Receipt buildReceipt(Receipt receipt) {
         Receipt receiptToSave = new Receipt();
@@ -73,6 +78,22 @@ public class ReceiptService {
         return receiptToSave;
     }
 
+    //Method to save a ReceiptDTO
+    public ReceiptDTO saveReceipt(Receipt receipt) {
+        Boolean clientExists = isClient(receipt.getClient());
+        Boolean productsExist = isProduct(receipt.getLines());
+        Boolean stockExists = isStock(receipt.getLines());
+
+        if(clientExists && productsExist && stockExists) {
+            Receipt receiptToSave = buildReceipt(receipt);
+            updateStock(receiptToSave.getLines());
+
+            return createReceiptDTO(this.receiptRepository.save(receiptToSave));
+        } else {
+            return new ReceiptDTO();
+        }
+    }
+
     //Method that creates a lineDTO
     private Set<ReceiptProductDTO> createReceiptProductDTO(Set<ReceiptProduct> receiptProducts) {
         Set<ReceiptProductDTO> dtos = new HashSet<>();
@@ -89,14 +110,15 @@ public class ReceiptService {
         return dtos;
     }
 
-    //Method to create a List of Receipts
-    private List<ReceiptDTO> createReceiptsDTO(List<Receipt> receipts) {
-        List<ReceiptDTO> receiptsDTOs = new ArrayList<>();
-        for(Receipt receipt : receipts) {
-            receiptsDTOs.add(this.createReceiptDTO(receipt));
-        }
 
-        return receiptsDTOs;
+    // Method to get a ReceiptDTO
+    public ReceiptDTO findById(Long id) {
+        Optional<Receipt> receipt = this.receiptRepository.findById(id);
+        if(receipt.isPresent()) {
+            return createReceiptDTO(receipt.get());
+        } else {
+            return new ReceiptDTO();
+        }
     }
 
     // Method to create a ReceiptDTO by getting a receipt as parameter
@@ -111,22 +133,12 @@ public class ReceiptService {
         return dto;
     }
 
-    // Method to get a ReceiptDTO
-    public ReceiptDTO findById(Long id) {
-        Optional<Receipt> receipt = this.receiptRepository.findById(id);
-        if(receipt.isPresent()) {
-            return createReceiptDTO(receipt.get());
-        } else {
-            return new ReceiptDTO();
-        }
-    }
-
     // This method allows to create a line
     private ReceiptProduct createLine(ReceiptProduct receiptProduct) {
         ReceiptProduct lineToSave = new ReceiptProduct();
 
         Product productDB = this.productRepository.findById(receiptProduct.getProduct().getProductId()).get();
-
+        lineToSave.setReceipt(receiptProduct.getReceipt());
         lineToSave.setQuantity(receiptProduct.getQuantity());
         lineToSave.setDescription(receiptProduct.getDescription());
         lineToSave.setPrice(productDB.getPrice() * receiptProduct.getQuantity());
@@ -134,6 +146,17 @@ public class ReceiptService {
 
         return lineToSave;
     }
+
+    //Method to create a List of Receipts
+    private List<ReceiptDTO> createReceiptsDTO(List<Receipt> receipts) {
+        List<ReceiptDTO> receiptsDTOs = new ArrayList<>();
+        for(Receipt receipt : receipts) {
+            receiptsDTOs.add(this.createReceiptDTO(receipt));
+        }
+
+        return receiptsDTOs;
+    }
+
 
 
     // Method to check if there's stock of a certain product.
@@ -185,5 +208,20 @@ public class ReceiptService {
 
         return total;
     }
+
+    private void updateStock(Set<ReceiptProduct> receiptProducts) {
+        for(ReceiptProduct receiptProduct : receiptProducts) {
+            Integer soldQuantity = receiptProduct.getQuantity();
+            Product productSold = receiptProduct.getProduct();
+            Optional<Product> productDB = this.productRepository.findById(productSold.getProductId());
+            Integer stock = productDB.get().getQuantity();
+
+            Integer updatedStock = stock - soldQuantity;
+
+            this.productRepository.save(productDB.get());
+        }
+    }
+
+
 
 }
