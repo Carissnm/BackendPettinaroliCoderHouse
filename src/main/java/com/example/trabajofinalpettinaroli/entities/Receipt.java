@@ -3,8 +3,10 @@ package com.example.trabajofinalpettinaroli.entities;
 import com.sun.istack.NotNull;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "RECEIPT")
@@ -16,7 +18,7 @@ public class Receipt {
     private @NotNull Long id;
 
     @Column(name = "RECEIPT_DATE", columnDefinition = "datetime")
-    private @NotNull Date date;
+    private @NotNull LocalDate date;
 
     @Column(name = "QUANTITY", columnDefinition = "integer(11)")
     private @NotNull Integer quantity;
@@ -31,25 +33,33 @@ public class Receipt {
 
     // Relación entre Receipt y ReceiptProducts
     @OneToMany(mappedBy = "receipt")
-    private List<ReceiptProduct> lines;
+    private Set<ReceiptProduct> lines;
 
     //CONSTRUCTORS
 
     public Receipt() {
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
     // GETTERS & SETTERS
 
 
+    public Set<ReceiptProduct> getLines() {
+        return lines;
+    }
+
+    public void setLines(Set<ReceiptProduct> lines) {
+        this.lines = lines;
+    }
+
     public Long getReceiptId() {
         return id;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
@@ -75,6 +85,13 @@ public class Receipt {
 
     public void setClient(Client client) {
         this.client = client;
+    }
+
+    public ReceiptProduct addLinea(ReceiptProduct linea) {
+        getLines().add(linea);
+        linea.setReceipt(this);
+
+        return linea;
     }
 
     @Override
