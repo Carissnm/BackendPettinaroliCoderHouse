@@ -1,5 +1,6 @@
 package com.example.trabajofinalpettinaroli.controllers;
 
+import com.example.trabajofinalpettinaroli.dto.ReceiptDTO;
 import com.example.trabajofinalpettinaroli.entities.Receipt;
 import com.example.trabajofinalpettinaroli.services.ReceiptService;
 import org.apache.coyote.Response;
@@ -68,6 +69,11 @@ public class ReceiptController {
             e.printStackTrace();
             return ResponseEntity.internalServerError().body("Ocurrió un error");
         }
+    }
+
+    @PostMapping(value = "/agregar/comprobante")
+    public ReceiptDTO createReceiptDTO(@RequestBody Receipt receipt) {
+        return this.receiptService.saveReceipt(receipt);
     }
 
 
