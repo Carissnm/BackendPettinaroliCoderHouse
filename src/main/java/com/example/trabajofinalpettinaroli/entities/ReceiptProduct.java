@@ -1,5 +1,7 @@
 package com.example.trabajofinalpettinaroli.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sun.istack.NotNull;
 
 import javax.persistence.*;
@@ -21,6 +23,7 @@ public class ReceiptProduct {
 
     @Column(name = "PRICE", columnDefinition = "float(10,2)")
     private @NotNull Float price;
+
 
     @ManyToOne
     @JoinColumn(name = "RECEIPT_ID", columnDefinition = "integer(11)")

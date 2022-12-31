@@ -67,6 +67,7 @@ public class ReceiptService {
             receiptToSave.setDate(LocalDate.now()); // In case we can't obtain this information from the external API i obtain it from java's LocalDate.now()
         }
 
+        // Here i create a Set
         receiptToSave.setLines(new HashSet<ReceiptProduct>());
         for(ReceiptProduct receiptProduct : receipt.getLines()) {
             receiptToSave.addLinea(createLine(receiptProduct));
@@ -78,19 +79,20 @@ public class ReceiptService {
         return receiptToSave;
     }
 
-    //Method to save a ReceiptDTO
+    //Method to save a ReceiptDTO (This method first checks that the Client, product exists and that there's stock
+    // afterwards it builds a Receipt and updates the stock
     public ReceiptDTO saveReceipt(Receipt receipt) {
         Boolean clientExists = isClient(receipt.getClient());
         Boolean productsExist = isProduct(receipt.getLines());
         Boolean stockExists = isStock(receipt.getLines());
 
         if(clientExists && productsExist && stockExists) {
-            Receipt receiptToSave = buildReceipt(receipt);
-            updateStock(receiptToSave.getLines());
+            Receipt receiptToSave = buildReceipt(receipt); // calls buildReceipt to create a Receipt with the data sent from the frontend
+            updateStock(receiptToSave.getLines()); // updates the stock from the db
 
-            return createReceiptDTO(this.receiptRepository.save(receiptToSave));
+            return createReceiptDTO(this.receiptRepository.save(receiptToSave)); // saves the receipt in the db
         } else {
-            return new ReceiptDTO();
+            return new ReceiptDTO(); // if any of the conditions is false then it returns an empty new ReceiptDTO.
         }
     }
 
@@ -128,12 +130,12 @@ public class ReceiptService {
         dto.setReceiptId(receipt.getReceiptId());
         dto.setClient(receipt.getClient());
         dto.setDate(receipt.getDate());
-        dto.setLines(createReceiptProductDTO(receipt.getLines()));
-
+        dto.setLines(createReceiptProductDTO(receipt.getLines())); // here we set the lines to be the ones received from the receipt
+        // this method calls createReceiptProductDTO which takes the parameter's lines as an argument.
         return dto;
     }
 
-    // This method allows to create a line
+    // This method allows to create Receipt line.
     private ReceiptProduct createLine(ReceiptProduct receiptProduct) {
         ReceiptProduct lineToSave = new ReceiptProduct();
 
@@ -190,7 +192,7 @@ public class ReceiptService {
         return true;
     }
 
-    // Method to check if a certain Client exists
+    // Method to check if a given Client exists
     private Boolean isClient(Client client) {
         Optional<Client> c = this.clientRepository.findById(client.getClientId());
 
@@ -209,16 +211,19 @@ public class ReceiptService {
         return total;
     }
 
+    // updateStock receives a set of items. gets the product and the quantity of each "line" and updates the stock;
     private void updateStock(Set<ReceiptProduct> receiptProducts) {
         for(ReceiptProduct receiptProduct : receiptProducts) {
             Integer soldQuantity = receiptProduct.getQuantity();
             Product productSold = receiptProduct.getProduct();
             Optional<Product> productDB = this.productRepository.findById(productSold.getProductId());
-            Integer stock = productDB.get().getQuantity();
+            if(productDB.isPresent()) {
+                Integer stock = productDB.get().getQuantity();
 
-            Integer updatedStock = stock - soldQuantity;
+                Integer updatedStock = stock - soldQuantity;
+                this.productRepository.save(productDB.get());
+            }
 
-            this.productRepository.save(productDB.get());
         }
     }
 

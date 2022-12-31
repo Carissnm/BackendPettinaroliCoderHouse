@@ -31,8 +31,7 @@ public class ReceiptController {
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.internalServerError().body("Ocurrió un error");
+            return ResponseEntity.internalServerError().body(e.getStackTrace());
         }
 
     }
@@ -48,12 +47,11 @@ public class ReceiptController {
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.internalServerError().body("Ocurrió un error");
+            return ResponseEntity.internalServerError().body(e.getStackTrace());
         }
     }
 
-    @DeleteMapping(value = "/borrar/{id}")
+    @DeleteMapping(value = "/borrar/{id}") // Deletes a receipt selected by Id.
     public ResponseEntity<?> deleteReceipt(@PathVariable(name = "id") Long id) {
         try {
             Optional<Receipt> receiptToDelete = receiptService.getReceiptById(id);
@@ -66,15 +64,16 @@ public class ReceiptController {
 
         }
         catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.internalServerError().body("Ocurrió un error");
+            return ResponseEntity.internalServerError().body(e.getStackTrace());
         }
     }
 
     @PostMapping(value = "/agregar/comprobante")
     public ReceiptDTO createReceiptDTO(@RequestBody Receipt receipt) {
         return this.receiptService.saveReceipt(receipt);
-    }
+    } // the receipt comes from the frontend with all the information regarding the client who's
+    // making the purchase, all the items picked and their quantities as lines.
+    // the backend receives it and saves everything on each db table and returns the "ticket" saved.
 
 
 }
