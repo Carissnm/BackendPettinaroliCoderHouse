@@ -1,5 +1,7 @@
 package com.example.trabajofinalpettinaroli.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sun.istack.NotNull;
 
 import javax.persistence.*;
@@ -25,6 +27,7 @@ public class Client {
     @Column(name = "CLIENT_SURNAME", columnDefinition = "varchar(255)")
     private @NotNull String clientSurname;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
     private List<Receipt> receipts;
 

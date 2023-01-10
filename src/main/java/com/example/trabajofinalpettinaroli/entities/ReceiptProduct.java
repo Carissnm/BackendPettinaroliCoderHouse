@@ -25,10 +25,12 @@ public class ReceiptProduct {
     private @NotNull Float price;
 
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "RECEIPT_ID", columnDefinition = "integer(11)")
     Receipt receipt;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "PRODUCT_ID", columnDefinition = "integer(11)")
     Product product;

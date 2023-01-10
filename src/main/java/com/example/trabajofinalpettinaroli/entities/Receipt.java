@@ -1,5 +1,6 @@
 package com.example.trabajofinalpettinaroli.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sun.istack.NotNull;
 
 import javax.persistence.*;
@@ -26,12 +27,13 @@ public class Receipt {
     @Column(name = "TOTAL", columnDefinition = "float(10,2)")
     private @NotNull Float total;
 
-    // Relación de la entidad Receipt con la entidad Cliente
+    // Relationship between Receipt and Client. One client can have many Receipts
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "CLIENT_ID", columnDefinition = "integer(11)")
     private Client client;
 
-    // Relación entre Receipt y ReceiptProducts
+    // Relationship between Receipt and its lines (One receipt can have many lines (items) )
+    @JsonManagedReference
     @OneToMany(mappedBy = "receipt")
     private Set<ReceiptProduct> lines;
 
