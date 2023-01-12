@@ -2,10 +2,7 @@ package com.example.trabajofinalpettinaroli.services;
 
 import com.example.trabajofinalpettinaroli.dto.ReceiptDTO;
 import com.example.trabajofinalpettinaroli.dto.ReceiptProductDTO;
-import com.example.trabajofinalpettinaroli.entities.Client;
-import com.example.trabajofinalpettinaroli.entities.Product;
-import com.example.trabajofinalpettinaroli.entities.Receipt;
-import com.example.trabajofinalpettinaroli.entities.ReceiptProduct;
+import com.example.trabajofinalpettinaroli.entities.*;
 import com.example.trabajofinalpettinaroli.repositories.ClientRepository;
 import com.example.trabajofinalpettinaroli.repositories.ProductRepository;
 import com.example.trabajofinalpettinaroli.repositories.ReceiptRepository;
@@ -58,10 +55,12 @@ public class ReceiptService {
 
         receiptToSave.setClient(this.clientRepository.findById(receipt.getClient().getClientId()).get());
 
-        LocalDate actualDate = this.restTemplate.getForObject("http://worldclockapi.com/api/json/utc/now", LocalDate.class);
+        WorldClock worldClock = this.restTemplate.getForObject("http://worldclockapi.com/api/json/utc/now", WorldClock.class);
+
+        LocalDate currentDateTime = LocalDate.parse(worldClock.getCurrentDateTime());
 
         try {
-            receiptToSave.setDate(actualDate);
+            receiptToSave.setDate(currentDateTime);
         } catch (Exception e) {
             e.printStackTrace();
             receiptToSave.setDate(LocalDate.now()); // In case we can't obtain this information from the external API i obtain it from java's LocalDate.now()

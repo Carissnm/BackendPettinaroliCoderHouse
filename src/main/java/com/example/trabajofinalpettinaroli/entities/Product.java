@@ -33,6 +33,7 @@ public class Product {
    // mapeo la tabla ReceiptProduct desde producto para generar la relación OneToMany
 
    @JsonManagedReference
+   @JsonIgnore
    @OneToMany(mappedBy = "product")
    private List<ReceiptProduct> lines;
 
